@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package main;
+option go_package = "api/";
+
+service MovieService {
+  rpc GetMovieList (GetMovieListRequest) returns (GetMovieListResponse);
+  rpc GetMovie (GetMovieRequest) returns (GetMovieResponse);
+  rpc GetMovieKeywordList (GetMovieKeywordListRequest) returns (GetMovieKeywordListResponse);
+  rpc GetMovieCreditsList (GetMovieCreditsListRequest) returns (GetMovieCreditsListResponse);
+}
+
+message Movie {
+  int32 id = 1;
+  string original_title = 2;
+  string overview = 3;
+  string title = 4;
+  string original_language = 5;
+  bool adult = 6;
+}
+
+message Keyword{
+  int32 id = 1;
+  string name = 2;
+}
+
+message Cast{
+  bool adult = 1;
+  int32 gender = 2;
+  int32 id = 3;
+  string known_for_department = 4;
+  string name = 5;
+  string original_name = 6;
+  string profile_path = 7;
+  int32 cast_id = 8;
+  string character = 9;
+  string credit_id = 10;
+  int32 order = 11;
+}
+
+message GetMovieListRequest{
+}
+
+message GetMovieListResponse{
+  repeated Movie movieList = 1;
+}
+
+message  GetMovieRequest{
+  int32 id = 1;
+}
+
+message GetMovieResponse{
+  Movie movie = 1;
+}
+
+message GetMovieKeywordListRequest{
+  int32 id = 1;
+}
+
+message GetMovieKeywordListResponse{
+  repeated Keyword keywordList = 1;
+}
+
+message GetMovieCreditsListRequest{
+  int32 id = 1;
+  string language = 2;
+}
+
+message GetMovieCreditsListResponse{
+  repeated Cast castList = 1;
+}
