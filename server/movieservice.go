@@ -40,3 +40,16 @@ func (s *movieServiceServer) GetMovieList(ctx context.Context, request *api.GetM
 		},
 	}, nil
 }
+
+func (s *movieServiceServer) GetMovie(ctx context.Context, request *api.GetMovieRequest) (*api.GetMovieResponse, error) {
+	return &api.GetMovieResponse{
+		Movie: &api.Movie{
+			Id:               request.Id,
+			OriginalTitle:    "Demo Movie",
+			Overview:         "Demo Overview",
+			Title:            "Demo Title",
+			OriginalLanguage: "Demo Language",
+			Adult:            true,
+		},
+	}, nil
+}
