@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"go-grpc-service/api"
+	r "go-grpc-service/repository"
 )
 
 type Movie struct {
@@ -19,37 +20,29 @@ type movieServiceServer struct {
 }
 
 func (s *movieServiceServer) GetMovieList(ctx context.Context, request *api.GetMovieListRequest) (*api.GetMovieListResponse, error) {
-	return &api.GetMovieListResponse{
-		MovieList: []*api.Movie{
-			{
-				Id:               1,
-				OriginalTitle:    "Demo Movie 1",
-				Overview:         "Demo Overview 1",
-				Title:            "Demo Title 1",
-				OriginalLanguage: "Demo Language 1",
-				Adult:            true,
-			},
-			{
-				Id:               2,
-				OriginalTitle:    "Demo Movie 2",
-				Overview:         "Demo Overview 2",
-				Title:            "Demo Title 2",
-				OriginalLanguage: "Demo Language 2",
-				Adult:            false,
-			},
-		},
-	}, nil
+	var movieList []*api.Movie
+	repo := r.NewGormRepository()
+	defer func(repo *r.GormRepository) {
+		err := repo.Close()
+		if err != nil {
+
+		}
+	}(repo)
+
+	repo.Find(&movieList)
+	return &api.GetMovieListResponse{MovieList: movieList}, nil
 }
 
 func (s *movieServiceServer) GetMovie(ctx context.Context, request *api.GetMovieRequest) (*api.GetMovieResponse, error) {
-	return &api.GetMovieResponse{
-		Movie: &api.Movie{
-			Id:               request.Id,
-			OriginalTitle:    "Demo Movie",
-			Overview:         "Demo Overview",
-			Title:            "Demo Title",
-			OriginalLanguage: "Demo Language",
-			Adult:            true,
-		},
-	}, nil
+	var movie *api.Movie
+	repo := r.NewGormRepository()
+	defer func(repo *r.GormRepository) {
+		err := repo.Close()
+		if err != nil {
+
+		}
+	}(repo)
+
+	repo.Find(&movie, "id = ?", request.Id)
+	return &api.GetMovieResponse{Movie: movie}, nil
 }
